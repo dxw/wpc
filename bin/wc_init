@@ -1,0 +1,38 @@
+#!/bin/sh
+set -e
+
+cat > docker-compose.yml <<END
+version: "3"
+
+volumes:
+  mysql_data:
+
+services:
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - "1080:1080"
+
+  beanstalk:
+    image: schickling/beanstalkd
+
+  mysql:
+    image: mysql
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_ROOT_PASSWORD: foobar
+
+  wordpress:
+    image: thedxw/wc-wordpress
+    ports:
+      - "80:80"
+    links:
+      - mysql
+      - mailcatcher
+      - beanstalk
+    volumes:
+      - .:/usr/src/app
+      - ./wp-content:/var/www/html/wp-content
+END
