@@ -34,11 +34,6 @@ if (!defined('DISABLE_PASSWORD_NERFING')) {
     }
 }
 
-// WP_DEBUG off by default
-if (!defined('WP_DEBUG')) {
-    define('WP_DEBUG', false);
-}
-
 // For some reason this is not being set correctly by default
 if (!defined('DB_CHARSET')) {
     define('DB_CHARSET', 'utf8mb4');
@@ -66,7 +61,9 @@ define('DB_PASSWORD', 'foobar');
 
 // wp-config stuff
 
-define('WP_DEBUG', true);
+if (!defined('WP_DEBUG')) {
+    define('WP_DEBUG', false);
+}
 define('WP_DEBUG_DISPLAY', true);
 define('WP_ALLOW_MULTISITE', true);
 define('FS_METHOD', 'direct');
@@ -81,7 +78,9 @@ define('LOGGED_IN_SALT',   'put your unique phrase here');
 define('NONCE_SALT',       'put your unique phrase here');
 
 define('WPLANG', '');
-define('ABSPATH', dirname(__FILE__) . '/');
+if (!defined('ABSPATH')) {
+    define('ABSPATH', dirname(__FILE__) . '/');
+}
 $table_prefix = 'wp_';
 
 require_once(ABSPATH . 'wp-settings.php');
