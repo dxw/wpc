@@ -1,11 +1,18 @@
 #!/bin/sh
 set -e
 
+if test ${1}X = X; then
+  echo 'Usage: wpc_init name-of-project'
+  exit 1
+fi
+
+REPLACEMENT=`echo ${1} | perl -pe 'chomp;s/[^A-Za-z0-9_-]/_/g'`
+
 cat > docker-compose.yml <<END
 version: "3"
 
 volumes:
-  mysql_data:
+  mysql_data_!!!PROJECTNAME!!!:
 
 services:
   mailcatcher:
@@ -19,7 +26,7 @@ services:
   mysql:
     image: mysql
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql_data_!!!PROJECTNAME!!!:/var/lib/mysql
     environment:
       MYSQL_DATABASE: wordpress
       MYSQL_ROOT_PASSWORD: foobar
@@ -36,3 +43,5 @@ services:
       - .:/usr/src/app
       - ./wp-content:/var/www/html/wp-content
 END
+
+perl -pi -e 's/!!!PROJECTNAME!!!/'${REPLACEMENT}'/g' docker-compose.yml
