@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+
+FLAGS=
+
+# Add -t flag iff STDIN is a TTY
+if [ -t 0 ]; then
+  FLAGS=-t
+fi
+
+docker exec -i ${FLAGS} app_wordpress_1 wp ${@}

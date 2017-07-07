@@ -32,3 +32,12 @@ To access bash within the WordPress container:
 ```
 wpc_console
 ```
+
+To access wp-cli:
+
+```
+wpc_cli --info
+wpc_cli db cli
+wpc_cli db import - < database.sql
+wpc_cli db export - > database.sql
+```
