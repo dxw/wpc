@@ -1,6 +1,0 @@
-#!/bin/sh
-set -e
-
-export COMPOSE_PROJECT_NAME=whippet`pwd | perl -pe 's{[^a-zA-Z0-9]}{}g'`
-
-exec docker-compose down
