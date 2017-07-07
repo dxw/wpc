@@ -26,3 +26,9 @@ docker-compose up
 ```
 
 WordPress will now be listening on port 80. Mailcatcher will be available on port 1080.
+
+To access bash within the WordPress container:
+
+```
+wpc_console
+```

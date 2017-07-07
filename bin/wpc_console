@@ -1,0 +1,4 @@
+#!/bin/sh
+set -e
+
+docker exec -ti app_wordpress_1 bash
