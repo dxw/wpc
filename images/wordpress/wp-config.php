@@ -10,22 +10,6 @@ if (file_exists('/usr/src/app/config/server-local.php')) {
     require('/usr/src/app/config/server-local.php');
 }
 
-// Populate globals from any env vars starting with WORDPRESS_
-foreach ($_ENV as $k => $v) {
-    $match = 'WORDPRESS_';
-    if (substr($k, 0, strlen($match)) !== $match) {
-        continue;
-    }
-
-    $const = substr($k, strlen($match));
-
-    if (defined($const)) {
-        continue;
-    }
-
-    define($const, $v);
-}
-
 // For some reason this is not being set correctly by default
 if (!defined('DB_CHARSET')) {
     define('DB_CHARSET', 'utf8mb4');
