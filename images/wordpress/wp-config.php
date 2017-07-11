@@ -26,14 +26,6 @@ foreach ($_ENV as $k => $v) {
     define($const, $v);
 }
 
-// Password nerfing
-if (!defined('DISABLE_PASSWORD_NERFING')) {
-    function wp_check_password()
-    {
-        return true;
-    }
-}
-
 // For some reason this is not being set correctly by default
 if (!defined('DB_CHARSET')) {
     define('DB_CHARSET', 'utf8mb4');
