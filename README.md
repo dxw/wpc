@@ -15,29 +15,25 @@ sudo cp wpc/bin/* /usr/local/bin/
 wpc_init name-of-project
 ```
 
-This will create a `docker-compose.yml` file in the current directory.
+You can edit `setup/internal.sh` to enable plugins and themes using wp-cli. (`setup/external.sh` also exists, if you need to run commands outside of the container).
 
 ## Usage
 
-Running the project:
+Running the project for the first time:
 
 ```
-docker-compose up
+docker-compose up -d
+./bin/setup
 ```
 
-WordPress will now be listening on port 80. Mailcatcher will be available on port 1080.
-
-To access bash within the WordPress container:
+Running the project after that:
 
 ```
-wpc_console
+docker-compose up -d
 ```
 
-To access wp-cli:
+WordPress listens on port 80. Mailcatcher listens on port 1080.
 
-```
-wpc_cli --info
-wpc_cli db cli
-wpc_cli db import - < database.sql
-wpc_cli db export - > database.sql
-```
+MySQL is available by running `./bin/wp db cli`. It will also be listening on port 3306.
+
+To access bash within the container: `./bin/console`.

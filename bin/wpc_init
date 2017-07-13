@@ -103,12 +103,23 @@ creating setup/external.sh <<'END'
 #!/bin/sh
 set -e
 
+##
+## This code will be run during setup, OUTSIDE the container.
+##
+## Because `whippet` running inside the container wouldn't be able to connect
+## to private repositories.
+##
+
 whippet deps install
 END
 
 creating setup/internal.sh <<'END'
 #!/bin/sh
 set -e
+
+##
+## This code will be run during setup, INSIDE the container.
+##
 
 wp core install --skip-email --admin_user=admin --admin_password=admin --admin_email=admin@localhost.invalid --url=http://localhost --title=Site
 # wp theme activate ...
