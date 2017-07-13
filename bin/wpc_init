@@ -36,6 +36,16 @@ services:
 
   beanstalk:
     image: schickling/beanstalkd
+    ports:
+      - "11300:11300"
+
+  beanstalkd_console:
+    image: agaveapi/beanstalkd-console
+    ports:
+      - "2080:80"
+    environment:
+      BEANSTALKD_HOST:beanstalk
+      BEANSTALKD_PORT:11300
 
   mysql:
     image: mysql
@@ -93,6 +103,8 @@ END
 
 creating bin/setup <<'END'
 #!/bin/sh
+#
+# Runs all site setup scripts
 set -e
 
 `dirname $0`/../setup/external.sh
@@ -121,7 +133,15 @@ set -e
 ## This code will be run during setup, INSIDE the container.
 ##
 
-wp core install --skip-email --admin_user=admin --admin_password=admin --admin_email=admin@localhost.invalid --url=http://localhost --title=Site
-# wp theme activate ...
-# wp plugin activate ...
+##############
+# Config
+##############
+title=your_site_title
+theme=your-theme-slug
+plugins="a-space-separated list-of plugins-to-activate"
+
+wp core install --skip-email --admin_user=admin --admin_password=admin --admin_email=admin@localhost.invalid --url=http://localhost --title=$title
+wp plugin activate $plugins
+wp theme activate $theme
+
 END
