@@ -19,6 +19,7 @@ creating() {
 
 makedir bin
 makedir setup
+makedir setup/content
 
 REPLACEMENT=`echo ${1} | perl -pe 'chomp;s/[^A-Za-z0-9_-]/_/g'`
 
@@ -44,8 +45,8 @@ services:
     ports:
       - "2080:80"
     environment:
-      BEANSTALKD_HOST:beanstalk
-      BEANSTALKD_PORT:11300
+      BEANSTALKD_HOST: beanstalk
+      BEANSTALKD_PORT: 11300
 
   mysql:
     image: mysql
@@ -139,9 +140,16 @@ set -e
 title=your_site_title
 theme=your-theme-slug
 plugins="a-space-separated list-of plugins-to-activate"
+content=/usr/src/app/setup/content/*
 
 wp core install --skip-email --admin_user=admin --admin_password=admin --admin_email=admin@localhost.invalid --url=http://localhost --title=$title
 wp plugin activate $plugins
 wp theme activate $theme
+
+for file in $content
+do
+  echo "Importing $file..."
+  wp import $file --authors=skip
+done
 
 END
