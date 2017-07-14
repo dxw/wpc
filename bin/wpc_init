@@ -140,7 +140,7 @@ set -e
 title=your_site_title
 theme=your-theme-slug
 plugins="a-space-separated list-of plugins-to-activate"
-content=/usr/src/app/setup/content/*
+content=/usr/src/app/setup/content
 
 wp core install --skip-email --admin_user=admin --admin_password=admin --admin_email=admin@localhost.invalid --url=http://localhost --title=$title
 
@@ -161,10 +161,21 @@ else
   echo "\033[96mWarning:\033[0m Theme '"$theme"' could not be found. Have you installed it?"
 fi
 
-for file in $content
-do
-  echo "Importing $file..."
-  wp import $file --authors=skip
-done
+if [ "$(ls -A $content)" ]
+then
+  if wp plugin is-installed wordpress-importer
+  then
+    wp plugin activate wordpress-importer
+    for file in $content/*.xml
+    do
+      echo "Importing $file..."
+      wp import $file --authors=skip
+    done
+  else
+    echo "\033[96mWarning:\033[0m Cannot import content as wordpress-importer plugin is not installed"
+  fi
+else
+  echo "No content to be imported"
+fi
 
 END
