@@ -10,7 +10,7 @@ RUN docker-php-ext-install mysqli && \
 
 # wp-cli
 RUN curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > /usr/local/bin/wp-cli.phar &&\
-    /bin/echo -e '#!/bin/sh\nexec php /usr/local/bin/wp-cli.phar --allow-root ${@}' > /usr/local/bin/wp &&\
+    /bin/echo -e '#!/bin/sh\nexec php /usr/local/bin/wp-cli.phar --allow-root "${@}"' > /usr/local/bin/wp &&\
     chmod 755 /usr/local/bin/wp
 
 # WordPress
