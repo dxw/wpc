@@ -11,9 +11,14 @@ makedir() {
   mkdir -p ${1}
 }
 
-creating() {
+creating_noexec() {
   echo "-> Creating ${1}"
   cat > ${1}
+  chmod 644 ${1}
+}
+
+creating() {
+  creating_noexec ${1}
   chmod 755 ${1}
 }
 
@@ -23,7 +28,7 @@ makedir setup/content
 
 REPLACEMENT=`echo ${1} | perl -pe 'chomp;s/[^A-Za-z0-9_-]/_/g'`
 
-creating docker-compose.yml <<'END'
+creating_noexec docker-compose.yml <<'END'
 version: "3"
 
 volumes:
