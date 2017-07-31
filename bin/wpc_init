@@ -137,12 +137,12 @@ set -e
 ##############
 # Config
 ##############
-title=your_site_title
+title="Your site title here"
 theme=your-theme-slug
 plugins="a-space-separated list-of plugins-to-activate"
 content=/usr/src/app/setup/content
 
-wp core install --skip-email --admin_user=admin --admin_password=admin --admin_email=admin@localhost.invalid --url=http://localhost --title=$title
+wp core install --skip-email --admin_user=admin --admin_password=admin --admin_email=admin@localhost.invalid --url=http://localhost --title="$title"
 
 for plugin in $plugins
 do
