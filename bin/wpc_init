@@ -19,6 +19,7 @@ creating() {
 
 makedir bin
 makedir setup
+makedir setup/content
 
 REPLACEMENT=`echo ${1} | perl -pe 'chomp;s/[^A-Za-z0-9_-]/_/g'`
 
@@ -36,6 +37,16 @@ services:
 
   beanstalk:
     image: schickling/beanstalkd
+    ports:
+      - "11300:11300"
+
+  beanstalkd_console:
+    image: agaveapi/beanstalkd-console
+    ports:
+      - "2080:80"
+    environment:
+      BEANSTALKD_HOST: beanstalk
+      BEANSTALKD_PORT: 11300
 
   mysql:
     image: mysql
@@ -93,6 +104,8 @@ END
 
 creating bin/setup <<'END'
 #!/bin/sh
+#
+# Runs all site setup scripts
 set -e
 
 `dirname $0`/../setup/external.sh
@@ -121,7 +134,48 @@ set -e
 ## This code will be run during setup, INSIDE the container.
 ##
 
-wp core install --skip-email --admin_user=admin --admin_password=admin --admin_email=admin@localhost.invalid --url=http://localhost --title=Site
-# wp theme activate ...
-# wp plugin activate ...
+##############
+# Config
+##############
+title="Your site title here"
+theme=your-theme-slug
+plugins="a-space-separated list-of plugins-to-activate"
+content=/usr/src/app/setup/content
+
+wp core install --skip-email --admin_user=admin --admin_password=admin --admin_email=admin@localhost.invalid --url=http://localhost --title="$title"
+
+for plugin in $plugins
+do
+  if wp plugin is-installed $plugin
+  then
+    wp plugin activate $plugin
+  else
+    echo "\033[96mWarning:\033[0m Plugin '"$plugin"' could not be found. Have you installed it?"
+  fi
+done
+
+if wp theme is-installed $theme
+then
+  wp theme activate $theme
+else
+  echo "\033[96mWarning:\033[0m Theme '"$theme"' could not be found. Have you installed it?"
+fi
+
+if [ "$(ls -A $content)" ]
+then
+  if wp plugin is-installed wordpress-importer
+  then
+    wp plugin activate wordpress-importer
+    for file in $content/*.xml
+    do
+      echo "Importing $file..."
+      wp import $file --authors=skip
+    done
+  else
+    echo "\033[96mWarning:\033[0m Cannot import content as wordpress-importer plugin is not installed"
+  fi
+else
+  echo "No content to be imported"
+fi
+
 END
