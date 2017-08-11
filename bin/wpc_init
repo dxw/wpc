@@ -178,7 +178,8 @@ done
 
 if wp theme is-installed $theme
 then
-  !!!THEMEENABLE!!! $theme
+  !!!THEMEENABLE!!!
+  wp theme activate $theme
 else
   echo "\033[96mWarning:\033[0m Theme '"$theme"' could not be found. Have you installed it?"
 fi
@@ -205,7 +206,7 @@ END
 if $MULTISITE = true; then
     perl -pi -e 's/!!!INSTALLTYPE!!!/multisite-install/g' setup/internal.sh
     perl -pi -e 's/!!!ACTIVATIONTYPE!!!/--network/g' setup/internal.sh
-    perl -pi -e 's/!!!THEMEENABLE!!!/wp theme enable --activate/g' setup/internal.sh
+    perl -pi -e 's/!!!THEMEENABLE!!!/wp theme enable --network $theme/g' setup/internal.sh
     makedir config
     creating config/server.php <<'END'
 <?php
@@ -234,5 +235,5 @@ END
 else
     perl -pi -e 's/!!!INSTALLTYPE!!!/install/g' setup/internal.sh
     perl -pi -e 's/!!!ACTIVATIONTYPE!!!//g' setup/internal.sh
-    perl -pi -e 's/!!!THEMEENABLE!!!/wp theme activate/g' setup/internal.sh
+    perl -pi -e 's/!!!THEMEENABLE!!!//g' setup/internal.sh
 fi
