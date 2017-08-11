@@ -3,7 +3,18 @@ set -e
 
 if test ${1}X = X; then
   echo 'Usage: wpc_init name-of-project'
+  echo '  --multisite: Make it a multisite installation'
   exit 1
+fi
+
+MULTISITE=false
+if test ${1} = --multisite; then
+  MULTISITE=true
+  shift
+fi
+
+if test X${2} = X--multisite; then
+  MULTISITE=true
 fi
 
 makedir() {
@@ -147,7 +158,7 @@ theme=your-theme-slug
 plugins="a-space-separated list-of plugins-to-activate"
 content=/usr/src/app/setup/content
 
-wp core install --skip-email --admin_user=admin --admin_password=admin --admin_email=admin@localhost.invalid --url=http://localhost --title="$title"
+wp core !!!INSTALL!!! --skip-email --admin_user=admin --admin_password=admin --admin_email=admin@localhost.invalid --url=http://localhost --title="$title"
 
 for plugin in $plugins
 do
@@ -182,5 +193,24 @@ then
 else
   echo "No content to be imported"
 fi
-
 END
+
+REPLACEMENT=install
+if ${MULTISITE}; then
+  REPLACEMENT=multisite-install
+fi
+perl -pi -e 's/!!!INSTALL!!!/'${REPLACEMENT}'/g' setup/internal.sh
+
+if ${MULTISITE}; then
+  makedir config
+  creating_noexec config/server.php <<'END'
+<?php
+
+define('MULTISITE', true);
+define('SUBDOMAIN_INSTALL', false);
+define('DOMAIN_CURRENT_SITE', 'localhost');
+define('PATH_CURRENT_SITE', '/');
+define('SITE_ID_CURRENT_SITE', 1);
+define('BLOG_ID_CURRENT_SITE', 1);
+END
+fi
