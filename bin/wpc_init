@@ -184,18 +184,25 @@ else
   echo "\033[96mWarning:\033[0m Theme '"$theme"' could not be found. Have you installed it?"
 fi
 
+import() {
+  for file in $content/*.xml
+  do
+    echo "Importing $file..."
+    wp import $file --authors=skip
+  done
+}
+
 if [ "$(ls -A $content)" ]
 then
   if wp plugin is-installed wordpress-importer
   then
     wp plugin activate wordpress-importer
-    for file in $content/*.xml
-    do
-      echo "Importing $file..."
-      wp import $file --authors=skip
-    done
+    import
   else
-    echo "\033[96mWarning:\033[0m Cannot import content as wordpress-importer plugin is not installed"
+    echo "WordPress Importer not installed... installing now"
+    wp plugin install wordpress-importer --activate
+    import
+    wp plugin uninstall wordpress-importer --deactivate
   fi
 else
   echo "No content to be imported"
