@@ -114,7 +114,7 @@ CONTAINER=`docker-compose ps -q wordpress`
 #
 # Issue: https://github.com/docker/compose/issues/3352
 
-docker exec -i ${FLAGS} ${CONTAINER} wp ${@}
+docker exec -i ${FLAGS} ${CONTAINER} wp "${@}"
 END
 
 creating bin/console <<'END'
