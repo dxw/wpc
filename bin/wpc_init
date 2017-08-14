@@ -3,7 +3,24 @@ set -e
 
 if test ${1}X = X; then
   echo 'Usage: wpc_init name-of-project'
+  echo '  --multisite: Make it a multisite installation'
   exit 1
+fi
+
+if test ${2}X = X && test ${1} = --multisite; then
+  echo 'Usage: wpc_init name-of-project'
+  echo '  --multisite: Make it a multisite installation'
+  exit 1
+fi
+
+MULTISITE=false
+if test ${1} = --multisite; then
+  MULTISITE=true
+  shift
+fi
+
+if test X${2} = X--multisite; then
+  MULTISITE=true
 fi
 
 makedir() {
@@ -147,13 +164,13 @@ theme=your-theme-slug
 plugins="a-space-separated list-of plugins-to-activate"
 content=/usr/src/app/setup/content
 
-wp core install --skip-email --admin_user=admin --admin_password=admin --admin_email=admin@localhost.invalid --url=http://localhost --title="$title"
+wp core !!!INSTALLTYPE!!! --skip-email --admin_user=admin --admin_password=admin --admin_email=admin@localhost.invalid --url=http://localhost --title="$title"
 
 for plugin in $plugins
 do
   if wp plugin is-installed $plugin
   then
-    wp plugin activate $plugin
+    wp plugin activate $plugin !!!ACTIVATIONTYPE!!!
   else
     echo "\033[96mWarning:\033[0m Plugin '"$plugin"' could not be found. Have you installed it?"
   fi
@@ -161,6 +178,7 @@ done
 
 if wp theme is-installed $theme
 then
+  !!!THEMEENABLE!!!
   wp theme activate $theme
 else
   echo "\033[96mWarning:\033[0m Theme '"$theme"' could not be found. Have you installed it?"
@@ -184,3 +202,38 @@ else
 fi
 
 END
+
+if $MULTISITE = true; then
+    perl -pi -e 's/!!!INSTALLTYPE!!!/multisite-install/g' setup/internal.sh
+    perl -pi -e 's/!!!ACTIVATIONTYPE!!!/--network/g' setup/internal.sh
+    perl -pi -e 's/!!!THEMEENABLE!!!/wp theme enable --network $theme/g' setup/internal.sh
+    makedir config
+    creating config/server.php <<'END'
+<?php
+    if(!defined('MULTISITE')) {
+        define( 'MULTISITE', true );
+    }
+    if(!defined('SUBDOMAIN_INSTALL')) {
+        define( 'SUBDOMAIN_INSTALL', false );
+    }
+    $base = '/';
+    if(!defined('DOMAIN_CURRENT_SITE')) {
+        define( 'DOMAIN_CURRENT_SITE', 'localhost' );
+    }
+    if(!defined('PATH_CURRENT_SITE')) {
+        define( 'PATH_CURRENT_SITE', '/' );
+    }
+    if(!defined('SITE_ID_CURRENT_SITE')) {
+        define( 'SITE_ID_CURRENT_SITE', 1 );
+    }
+    if(!defined('BLOG_ID_CURRENT_SITE')) {
+        define( 'BLOG_ID_CURRENT_SITE', 1 );
+    }
+
+END
+
+else
+    perl -pi -e 's/!!!INSTALLTYPE!!!/install/g' setup/internal.sh
+    perl -pi -e 's/!!!ACTIVATIONTYPE!!!//g' setup/internal.sh
+    perl -pi -e 's/!!!THEMEENABLE!!!//g' setup/internal.sh
+fi

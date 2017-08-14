@@ -12,7 +12,7 @@ sudo cp wpc/bin/* /usr/local/bin/
 ## Setting up a project
 
 ```
-wpc_init name-of-project
+wpc_init name-of-project [--multisite]
 ```
 
 You can edit `setup/internal.sh` to enable plugins and themes using wp-cli. (`setup/external.sh` also exists, if you need to run commands outside of the container).
