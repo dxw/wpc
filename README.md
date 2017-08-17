@@ -47,3 +47,27 @@ All the ports that docker will be listening on (80, 1080, 2080, 3066 & 11300) ne
 Things that might be running on port 80: apache (stop with `sudo apachectl stop`), any other local server (e.g. `whippet-server`, XAMPP)
 
 Things that might be running on port 3306: `mysql` (stop with `mysql.server stop`)
+
+## WordPress versions
+
+When the image is built, a copy of the latest version of WordPress is downloaded.
+
+When running the image, it will check for updates before starting Apache. It will also download older versions of WordPress via the `WORDPRESS_VERSION` environment variable.
+
+Example of using an older version (you should just need to add the two final lines):
+
+```
+  wordpress:
+    image: thedxw/wpc-wordpress
+    ports:
+      - "80:80"
+    links:
+      - mysql
+      - mailcatcher
+      - beanstalk
+    volumes:
+      - .:/usr/src/app
+      - ./wp-content:/var/www/html/wp-content
+    environment:
+      WORDPRESS_VERSION: 4.7
+```
