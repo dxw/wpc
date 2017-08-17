@@ -14,10 +14,7 @@ RUN curl --silent https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/
     chmod 755 /usr/local/bin/wp
 
 # WordPress
-RUN curl --silent https://wordpress.org/latest.tar.gz > /usr/src/latest.tar.gz && \
-    tar -C /usr/src -xzf /usr/src/latest.tar.gz && \
-    rm -rf /var/www/html /usr/src/wordpress/wp-content && \
-    mv /usr/src/wordpress /var/www/html
+RUN wp core download --path=/var/www/html
 
 COPY php.ini /usr/local/etc/php/
 COPY wordpress.conf /etc/apache2/sites-enabled/
