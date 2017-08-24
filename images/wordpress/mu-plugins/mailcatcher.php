@@ -1,8 +1,8 @@
 <?php
 
 add_action('phpmailer_init', function ($phpmailer) {
-    $phpmailer->Host = getenv('MAILCATCHER_PORT_1025_TCP_ADDR');
-    $phpmailer->Port = (int)getenv('MAILCATCHER_PORT_1025_TCP_PORT');
+    $phpmailer->Host = 'mailcatcher';
+    $phpmailer->Port = 1025;
     $phpmailer->SMTPAuth = false;
     $phpmailer->isSMTP();
 });
