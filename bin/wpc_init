@@ -28,6 +28,18 @@ makedir() {
   mkdir -p ${1}
 }
 
+new_or_overwrite()
+{
+  if test -f ${1}; then
+    read -n1 -p "The file ${1} already exists. Do you want to overwrite it? (y/n) " -r
+    echo
+    if ! [[ $REPLY =~ ^[Yy]$ ]] ; then
+      return 1
+    fi
+  fi
+  return 0
+}
+
 creating_noexec() {
   echo "-> Creating ${1}"
   cat > ${1}
@@ -45,7 +57,8 @@ makedir setup/content
 
 REPLACEMENT=`echo ${1} | perl -pe 'chomp;s/[^A-Za-z0-9_-]/_/g'`
 
-creating_noexec docker-compose.yml <<'END'
+if new_or_overwrite docker-compose.yml; then
+  creating_noexec docker-compose.yml <<'END'
 version: "3"
 
 volumes:
@@ -92,10 +105,11 @@ services:
       - .:/usr/src/app
       - ./wp-content:/var/www/html/wp-content
 END
+  perl -pi -e 's/!!!PROJECTNAME!!!/'${REPLACEMENT}'/g' docker-compose.yml
+fi
 
-perl -pi -e 's/!!!PROJECTNAME!!!/'${REPLACEMENT}'/g' docker-compose.yml
-
-creating bin/wp <<'END'
+if new_or_overwrite bin/wp; then
+  creating bin/wp <<'END'
 #!/bin/sh
 set -e
 
@@ -116,15 +130,19 @@ CONTAINER=`docker-compose ps -q wordpress`
 
 docker exec -i ${FLAGS} ${CONTAINER} wp "${@}"
 END
+fi
 
-creating bin/console <<'END'
+if new_or_overwrite bin/console; then
+  creating bin/console <<'END'
 #!/bin/sh
 set -e
 
 exec docker-compose exec wordpress bash
 END
+fi
 
-creating bin/setup <<'END'
+if new_or_overwrite bin/setup; then
+  creating bin/setup <<'END'
 #!/bin/sh
 set -e
 #
@@ -133,8 +151,10 @@ set -e
 `dirname $0`/../setup/external.sh
 docker-compose exec wordpress /usr/src/app/setup/internal.sh
 END
+fi
 
-creating setup/external.sh <<'END'
+if new_or_overwrite setup/external.sh; then
+  creating setup/external.sh <<'END'
 #!/bin/sh
 set -e
 
@@ -147,8 +167,10 @@ set -e
 
 whippet deps install
 END
+fi
 
-creating setup/internal.sh <<'END'
+if new_or_overwrite setup/internal.sh; then
+  creating setup/internal.sh <<'END'
 #!/bin/sh
 set -e
 
@@ -210,12 +232,13 @@ fi
 
 END
 
-if $MULTISITE = true; then
+  if $MULTISITE = true; then
     perl -pi -e 's/!!!INSTALLTYPE!!!/multisite-install/g' setup/internal.sh
     perl -pi -e 's/!!!ACTIVATIONTYPE!!!/--network/g' setup/internal.sh
     perl -pi -e 's/!!!THEMEENABLE!!!/wp theme enable --network $theme/g' setup/internal.sh
     makedir config
-    creating config/server.php <<'END'
+    if new_or_overwrite config/server.php; then
+      creating config/server.php <<'END'
 <?php
     if(!defined('MULTISITE')) {
         define( 'MULTISITE', true );
@@ -238,9 +261,11 @@ if $MULTISITE = true; then
     }
 
 END
+    fi
 
-else
+  else
     perl -pi -e 's/!!!INSTALLTYPE!!!/install/g' setup/internal.sh
     perl -pi -e 's/!!!ACTIVATIONTYPE!!!//g' setup/internal.sh
     perl -pi -e 's/!!!THEMEENABLE!!!//g' setup/internal.sh
+  fi
 fi
