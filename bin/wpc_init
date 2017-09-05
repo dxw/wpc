@@ -31,8 +31,8 @@ makedir() {
 new_or_overwrite()
 {
   if test -f ${1}; then
-    read -n1 -p "The file ${1} already exists. Do you want to overwrite it? (y/n) " -r
-    echo
+    echo "The file ${1} already exists. Do you want to overwrite it? (y/n) "
+    read REPLY
     if ! [[ $REPLY =~ ^[Yy]$ ]] ; then
       return 1
     fi
