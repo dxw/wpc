@@ -239,7 +239,7 @@ END
     sed -i -e 's/!!!THEMEENABLE!!!/wp theme enable --network $theme/g' setup/internal.sh
     makedir config
     if new_or_overwrite config/server.php; then
-      creating config/server.php <<'END'
+      creating_noexec config/server.php <<'END'
 <?php
     if(!defined('MULTISITE')) {
         define( 'MULTISITE', true );
