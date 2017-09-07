@@ -106,7 +106,8 @@ services:
       - .:/usr/src/app
       - ./wp-content:/var/www/html/wp-content
 END
-  sed -i -e 's/!!!PROJECTNAME!!!/'${REPLACEMENT}'/g' docker-compose.yml
+  sed -i.bak -e 's/!!!PROJECTNAME!!!/'${REPLACEMENT}'/g' docker-compose.yml
+  rm docker-compose.yml.bak
 fi
 
 if new_or_overwrite bin/wp; then
@@ -234,9 +235,10 @@ fi
 END
 
   if $MULTISITE = true; then
-    sed -i -e 's/!!!INSTALLTYPE!!!/multisite-install/g' setup/internal.sh
-    sed -i -e 's/!!!ACTIVATIONTYPE!!!/--network/g' setup/internal.sh
-    sed -i -e 's/!!!THEMEENABLE!!!/wp theme enable --network $theme/g' setup/internal.sh
+    sed -i.bak -e 's/!!!INSTALLTYPE!!!/multisite-install/g' setup/internal.sh
+    sed -i.bak -e 's/!!!ACTIVATIONTYPE!!!/--network/g' setup/internal.sh
+    sed -i.bak -e 's/!!!THEMEENABLE!!!/wp theme enable --network $theme/g' setup/internal.sh
+    rm setup/internal.sh.bak
     makedir config
     if new_or_overwrite config/server.php; then
       creating_noexec config/server.php <<'END'
@@ -265,8 +267,9 @@ END
     fi
 
   else
-    sed -i -e 's/!!!INSTALLTYPE!!!/install/g' setup/internal.sh
-    sed -i -e 's/!!!ACTIVATIONTYPE!!!//g' setup/internal.sh
-    sed -i -e 's/!!!THEMEENABLE!!!//g' setup/internal.sh
+    sed -i.bak -e 's/!!!INSTALLTYPE!!!/install/g' setup/internal.sh
+    sed -i.bak -e 's/!!!ACTIVATIONTYPE!!!//g' setup/internal.sh
+    sed -i.bak -e 's/!!!THEMEENABLE!!!//g' setup/internal.sh
+    rm setup/internal.sh.bak
   fi
 fi
