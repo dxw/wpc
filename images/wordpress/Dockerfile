@@ -1,10 +1,11 @@
 FROM php:7.2-apache
 
-RUN apt-get update && apt-get install -y --no-install-recommends libpng-dev vim-tiny less mysql-client libgmp-dev && rm -r /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends libpng-dev vim-tiny less mysql-client libgmp-dev libsodium-dev && rm -r /var/lib/apt/lists/*
 
 RUN docker-php-ext-install mysqli && \
     docker-php-ext-install gd && \
     docker-php-ext-install gmp && \
+    docker-php-ext-install sodium && \
     a2enmod rewrite
 
 RUN curl --silent https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > /usr/local/bin/wp-cli.phar
