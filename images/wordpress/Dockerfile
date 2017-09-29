@@ -1,6 +1,6 @@
 FROM php:apache
 
-RUN apt-get update && apt-get install -y --no-install-recommends libpng12-dev vim-tiny less mysql-client libgmp-dev && rm -r /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends libpng-dev vim-tiny less mysql-client libgmp-dev && rm -r /var/lib/apt/lists/*
 
 RUN docker-php-ext-install mysqli && \
     docker-php-ext-install gd && \
