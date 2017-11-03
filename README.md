@@ -4,15 +4,18 @@
 
 `docker-compose` must be installed.
 
+With Go installed, and Go's `/bin` in your PATH variable:
+
 ```
-git clone https://github.com/dxw/wpc
-sudo cp wpc/bin/* /usr/local/bin/
+go get https://github.com/dxw/wpc
 ```
 
 ## Setting up a project
 
+In the root of the project:
+
 ```
-wpc_init name-of-project [--multisite]
+wpc -project=name-of-project [-multisite]
 ```
 
 You can edit `setup/internal.sh` to enable plugins and themes using wp-cli. (`setup/external.sh` also exists, if you need to run commands outside of the container).
