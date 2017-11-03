@@ -9,6 +9,12 @@ import (
 	"os"
 )
 
+//Filemodes
+const (
+	NOEXEC = 0644
+	EXEC   = 0755
+)
+
 func main() {
 	multisite := flag.Bool("multisite", false, "Make it a multisite")
 	flag.Parse()
@@ -23,37 +29,17 @@ func main() {
 	makedir("setup/content")
 
 	createDockerCompose(project)
-	createBinWp()
-	createBinConsole()
-	createBinSetup()
-	createExternal()
+	creating("bin/wp", wpContents(), EXEC)
+	creating("bin/console", consoleContents(), EXEC)
+	creating("bin/setup", setupContents(), EXEC)
+	creating("setup/external.sh", externalContents(), EXEC)
 	createInternal(*multisite)
 }
 
 func createDockerCompose(project string) {
 	dockerComposeContents := dockerComposeContents()
 	dockerComposeContents = findAndReplace(dockerComposeContents, []byte("!!!PROJECTNAME!!!"), []byte(project))
-	creatingNoexec("docker-compose.yml", dockerComposeContents)
-}
-
-func createBinWp() {
-	contents := wpContents()
-	creating("bin/wp", contents)
-}
-
-func createBinConsole() {
-	contents := consoleContents()
-	creating("bin/console", contents)
-}
-
-func createBinSetup() {
-	contents := setupContents()
-	creating("bin/setup", contents)
-}
-
-func createExternal() {
-	contents := externalContents()
-	creating("setup/external.sh", contents)
+	creating("docker-compose.yml", dockerComposeContents, NOEXEC)
 }
 
 func createInternal(multisite bool) {
@@ -67,24 +53,19 @@ func createInternal(multisite bool) {
 		contents = findAndReplace(contents, []byte("!!!ACTIVATIONTYPE!!!"), []byte(""))
 		contents = findAndReplace(contents, []byte("!!!THEMEENABLE!!!"), []byte(""))
 	}
-	creating("setup/internal.sh", contents)
+	creating("setup/internal.sh", contents, EXEC)
 }
 
 func makedir(directory string) {
 	fmt.Println("-> Creating", directory)
-	os.Mkdir(directory, 0755)
+	os.Mkdir(directory, EXEC)
 }
 
-func creatingNoexec(file string, data []byte) {
+func creating(file string, data []byte, fileMode os.FileMode) {
 	if okToWrite(file) {
 		fmt.Println("-> Creating", file)
-		ioutil.WriteFile(file, data, 0644)
+		ioutil.WriteFile(file, data, fileMode)
 	}
-}
-
-func creating(file string, data []byte) {
-	creatingNoexec(file, data)
-	os.Chmod(file, 0755)
 }
 
 func okToWrite(file string) bool {
