@@ -6,6 +6,7 @@ import (
     "io/ioutil"
     "bytes"
     "flag"
+    "bufio"
 )
 
 
@@ -80,13 +81,27 @@ func makedir(directory string) {
 }
 
 func creatingNoexec(file string, data[]byte) {
-    println( "-> Creating", file)
-    ioutil.WriteFile(file, data, 0644)
+    if(okToWrite(file)) {
+        println( "-> Creating", file)
+        ioutil.WriteFile(file, data, 0644)
+    }
 }
 
 func creating(file string, data[]byte) {
     creatingNoexec(file, data)
     os.Chmod(file, 0755)
+}
+
+func okToWrite(file string) bool {
+    if _, err := os.Stat(file); !os.IsNotExist(err) {
+        reader := bufio.NewReader(os.Stdin)
+        println(file, "already exists, overwrite (y/n)?")
+        response, _ := reader.ReadString('\n')
+        if (response != "y\n" && response != "Y\n") {
+            return false
+        }
+    }
+    return true
 }
 
 func findAndReplace(haystack[]byte, old[]byte, new[]byte) []byte {
