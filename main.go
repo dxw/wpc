@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"flag"
-	_ "fmt"
+	"fmt"
 	"io/ioutil"
 	"os"
 )
@@ -15,11 +15,11 @@ func main() {
 	multisite := flag.Bool("multisite", false, "Make it a multisite")
 	flag.Parse()
 	if *project == "" {
-		println("You must set a value for the project argument")
+		fmt.Println("You must set a value for the project argument")
 		os.Exit(1)
 	}
 	if *multisite == true {
-		println("MULTISITE")
+		fmt.Println("MULTISITE")
 	}
 
 	makedir("bin")
@@ -75,13 +75,13 @@ func createInternal(multisite bool) {
 }
 
 func makedir(directory string) {
-	println("-> Creating", directory)
+	fmt.Println("-> Creating", directory)
 	os.Mkdir(directory, 0755)
 }
 
 func creatingNoexec(file string, data []byte) {
 	if okToWrite(file) {
-		println("-> Creating", file)
+		fmt.Println("-> Creating", file)
 		ioutil.WriteFile(file, data, 0644)
 	}
 }
@@ -94,7 +94,7 @@ func creating(file string, data []byte) {
 func okToWrite(file string) bool {
 	if _, err := os.Stat(file); !os.IsNotExist(err) {
 		reader := bufio.NewReader(os.Stdin)
-		println(file, "already exists, overwrite (y/n)?")
+		fmt.Println(file, "already exists, overwrite (y/n)?")
 		response, _ := reader.ReadString('\n')
 		if response != "y\n" && response != "Y\n" {
 			return false
