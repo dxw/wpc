@@ -3,30 +3,26 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"flag"
 	"fmt"
+	flag "github.com/spf13/pflag"
 	"io/ioutil"
 	"os"
 )
 
 func main() {
-	/* Go won't allow the same arg/flag construction we had before, so all flags instead */
-	project := flag.String("project", "", "Project name")
 	multisite := flag.Bool("multisite", false, "Make it a multisite")
 	flag.Parse()
-	if *project == "" {
+	project := flag.Arg(0)
+	if project == "" {
 		fmt.Println("You must set a value for the project argument")
 		os.Exit(1)
-	}
-	if *multisite == true {
-		fmt.Println("MULTISITE")
 	}
 
 	makedir("bin")
 	makedir("setup")
 	makedir("setup/content")
 
-	createDockerCompose(*project)
+	createDockerCompose(project)
 	createBinWp()
 	createBinConsole()
 	createBinSetup()

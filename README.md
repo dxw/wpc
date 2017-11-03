@@ -7,7 +7,7 @@
 With Go installed, and Go's `/bin` in your PATH variable:
 
 ```
-go get https://github.com/dxw/wpc
+go get github.com/dxw/wpc
 ```
 
 ## Setting up a project
@@ -15,7 +15,7 @@ go get https://github.com/dxw/wpc
 In the root of the project:
 
 ```
-wpc -project=name-of-project [-multisite]
+wpc name-of-project [--multisite]
 ```
 
 You can edit `setup/internal.sh` to enable plugins and themes using wp-cli. (`setup/external.sh` also exists, if you need to run commands outside of the container).
