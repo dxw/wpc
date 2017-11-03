@@ -1,8 +1,8 @@
 package main
 
 func externalContents() []byte {
-    return []byte(
-`#!/bin/sh
+	return []byte(
+		`#!/bin/sh
 set -e
 
 ##
@@ -18,8 +18,8 @@ fi`)
 }
 
 func internalContents() []byte {
-    return []byte(
-`#!/bin/sh
+	return []byte(
+		`#!/bin/sh
 set -e
 
 ##

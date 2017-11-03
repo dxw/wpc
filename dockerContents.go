@@ -1,8 +1,8 @@
 package main
 
 func dockerComposeContents() []byte {
-    dockerComposeContents := []byte(
-`version: "3"
+	dockerComposeContents := []byte(
+		`version: "3"
 
 volumes:
   mysql_data_!!!PROJECTNAME!!!:
@@ -47,5 +47,5 @@ services:
     volumes:
       - .:/usr/src/app
       - ./wp-content:/var/www/html/wp-content`)
-  return dockerComposeContents
+	return dockerComposeContents
 }

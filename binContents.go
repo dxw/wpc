@@ -1,8 +1,9 @@
 package main
 
 func wpContents() []byte {
-    return []byte(
-`#!/bin/sh
+
+	return []byte(
+		`#!/bin/sh
 set -e
 
 FLAGS=
@@ -24,16 +25,16 @@ docker exec -i ${FLAGS} ${CONTAINER} wp "${@}"`)
 }
 
 func consoleContents() []byte {
-    return []byte(
-`#!/bin/sh
+	return []byte(
+		`#!/bin/sh
 set -e
 
 exec docker-compose exec wordpress bash`)
 }
 
 func setupContents() []byte {
-    return []byte(
-`#!/bin/sh
+	return []byte(
+		`#!/bin/sh
 set -e
 #
 # Runs all site setup scripts
