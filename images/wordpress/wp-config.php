@@ -16,11 +16,12 @@ if (!defined('DB_CHARSET')) {
 }
 
 // Set URLs if they aren't set already
+$host = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost';
 if (!defined('WP_SITEURL')) {
-    define('WP_SITEURL', 'http://localhost');
+    define('WP_SITEURL', 'http://'.$host);
 }
 if (!defined('WP_HOME')) {
-    define('WP_HOME', 'http://localhost');
+    define('WP_HOME', 'http://'.$host);
 }
 
 // beanstalk
