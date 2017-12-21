@@ -24,9 +24,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	makedir("bin")
-	makedir("setup")
-	makedir("setup/content")
+	dirs := []string{"bin", "setup/content"}
+	makeDirs(dirs)
 
 	createDockerCompose(project)
 	creating("bin/wp", []byte(WPCONTENT), EXEC)
@@ -56,9 +55,11 @@ func createInternal(multisite bool) {
 	creating("setup/internal.sh", contents, EXEC)
 }
 
-func makedir(directory string) {
-	fmt.Println("-> Creating", directory)
-	os.Mkdir(directory, EXEC)
+func makeDirs(directories []string) {
+	for _, directory := range directories {
+		fmt.Println("-> Creating", directory)
+		os.MkdirAll(directory, EXEC)
+	}
 }
 
 func creating(file string, data []byte, fileMode os.FileMode) {
