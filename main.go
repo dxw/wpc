@@ -29,9 +29,9 @@ func main() {
 	makedir("setup/content")
 
 	createDockerCompose(project)
-	creating("bin/wp", wpContents(), EXEC)
-	creating("bin/console", consoleContents(), EXEC)
-	creating("bin/setup", setupContents(), EXEC)
+	creating("bin/wp", []byte(WPCONTENT), EXEC)
+	creating("bin/console", []byte(CONSOLECONTENT), EXEC)
+	creating("bin/setup", []byte(SETUPCONTENT), EXEC)
 	creating("setup/external.sh", externalContents(), EXEC)
 	createInternal(*multisite)
 }

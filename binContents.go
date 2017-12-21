@@ -1,16 +1,19 @@
 package main
 
-func wpContents() []byte {
+const (
+	CONSOLECONTENT = `#!/bin/sh
+set -e
 
-	return []byte(
-		`#!/bin/sh
+exec docker-compose exec wordpress bash`
+
+	WPCONTENT = `#!/bin/sh
 set -e
 
 FLAGS=
 
 # Add -t flag iff STDIN is a TTY
 if [ -t 0 ]; then
-  FLAGS=-t
+FLAGS=-t
 fi
 
 CONTAINER=` + "`" + `docker-compose ps -q wordpress` + "`" + `
@@ -21,24 +24,13 @@ CONTAINER=` + "`" + `docker-compose ps -q wordpress` + "`" + `
 #
 # Issue: https://github.com/docker/compose/issues/3352
 
-docker exec -i ${FLAGS} ${CONTAINER} wp "${@}"`)
-}
+docker exec -i ${FLAGS} ${CONTAINER} wp "${@}"`
 
-func consoleContents() []byte {
-	return []byte(
-		`#!/bin/sh
-set -e
-
-exec docker-compose exec wordpress bash`)
-}
-
-func setupContents() []byte {
-	return []byte(
-		`#!/bin/sh
+	SETUPCONTENT = `#!/bin/sh
 set -e
 #
 # Runs all site setup scripts
 
 ` + "`" + `dirname $0` + "`" + `/../setup/external.sh
-docker-compose exec wordpress /usr/src/app/setup/internal.sh`)
-}
+docker-compose exec wordpress /usr/src/app/setup/internal.sh`
+)
