@@ -1,8 +1,7 @@
 package main
 
-func externalContents() []byte {
-	return []byte(
-		`#!/bin/sh
+const (
+	EXTERNALCONTENT = `#!/bin/sh
 set -e
 
 ##
@@ -13,13 +12,10 @@ set -e
 ##
 
 if test -f whippet.json; then
-  whippet deps install
-fi`)
-}
+whippet deps install
+fi`
 
-func internalContents() []byte {
-	return []byte(
-		`#!/bin/sh
+	INTERNALCONTENT = `#!/bin/sh
 set -e
 
 ##
@@ -38,43 +34,43 @@ wp core !!!INSTALLTYPE!!! --skip-email --admin_user=admin --admin_password=admin
 
 for plugin in $plugins
 do
-  if wp plugin is-installed $plugin
-  then
-    wp plugin activate $plugin !!!ACTIVATIONTYPE!!!
-  else
-    echo "\033[96mWarning:\033[0m Plugin '"$plugin"' could not be found. Have you installed it?"
-  fi
+if wp plugin is-installed $plugin
+then
+wp plugin activate $plugin !!!ACTIVATIONTYPE!!!
+else
+echo "\033[96mWarning:\033[0m Plugin '"$plugin"' could not be found. Have you installed it?"
+fi
 done
 
 if wp theme is-installed $theme
 then
-  !!!THEMEENABLE!!!
-  wp theme activate $theme
+!!!THEMEENABLE!!!
+wp theme activate $theme
 else
-  echo "\033[96mWarning:\033[0m Theme '"$theme"' could not be found. Have you installed it?"
+echo "\033[96mWarning:\033[0m Theme '"$theme"' could not be found. Have you installed it?"
 fi
 
 import() {
-  for file in $content/*.xml
-  do
-    echo "Importing $file..."
-    wp import $file --authors=skip
-  done
+for file in $content/*.xml
+do
+echo "Importing $file..."
+wp import $file --authors=skip
+done
 }
 
 if [ "$(ls -A $content)" ]
 then
-  if wp plugin is-installed wordpress-importer
-  then
-    wp plugin activate wordpress-importer
-    import
-  else
-    echo "WordPress Importer not installed... installing now"
-    wp plugin install wordpress-importer --activate
-    import
-    wp plugin uninstall wordpress-importer --deactivate
-  fi
+if wp plugin is-installed wordpress-importer
+then
+wp plugin activate wordpress-importer
+import
 else
-  echo "No content to be imported"
-fi`)
-}
+echo "WordPress Importer not installed... installing now"
+wp plugin install wordpress-importer --activate
+import
+wp plugin uninstall wordpress-importer --deactivate
+fi
+else
+echo "No content to be imported"
+fi`
+)

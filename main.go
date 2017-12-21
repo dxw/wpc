@@ -32,7 +32,7 @@ func main() {
 	creating("bin/wp", []byte(WPCONTENT), EXEC)
 	creating("bin/console", []byte(CONSOLECONTENT), EXEC)
 	creating("bin/setup", []byte(SETUPCONTENT), EXEC)
-	creating("setup/external.sh", externalContents(), EXEC)
+	creating("setup/external.sh", []byte(EXTERNALCONTENT), EXEC)
 	createInternal(*multisite)
 }
 
@@ -43,7 +43,7 @@ func createDockerCompose(project string) {
 }
 
 func createInternal(multisite bool) {
-	contents := internalContents()
+	contents := []byte(INTERNALCONTENT)
 	if multisite {
 		contents = findAndReplace(contents, []byte("!!!INSTALLTYPE!!!"), []byte("multisite-install"))
 		contents = findAndReplace(contents, []byte("!!!ACTIVATIONTYPE!!!"), []byte("--network"))
