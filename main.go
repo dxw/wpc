@@ -37,7 +37,7 @@ func main() {
 }
 
 func createDockerCompose(project string) {
-	dockerComposeContents := dockerComposeContents()
+	dockerComposeContents := []byte(DOCKERCOMPOSECONTENT)
 	dockerComposeContents = findAndReplace(dockerComposeContents, []byte("!!!PROJECTNAME!!!"), []byte(project))
 	creating("docker-compose.yml", dockerComposeContents, NOEXEC)
 }
