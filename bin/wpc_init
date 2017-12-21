@@ -187,20 +187,24 @@ set -e
 ##############
 title="Your site title here"
 theme=your-theme-slug
-plugins="a-space-separated list-of plugins-to-activate"
+plugins="a-space-separated list-of plugins-to-activate or use-*-to-activate-all"
 content=/usr/src/app/setup/content
 
 wp core !!!INSTALLTYPE!!! --skip-email --admin_user=admin --admin_password=admin --admin_email=admin@localhost.invalid --url=http://localhost --title="$title"
 
-for plugin in $plugins
-do
-  if wp plugin is-installed $plugin
-  then
-    wp plugin activate $plugin !!!ACTIVATIONTYPE!!!
-  else
-    echo "\033[96mWarning:\033[0m Plugin '"$plugin"' could not be found. Have you installed it?"
-  fi
-done
+if [ "$plugins" = "*" ]; then
+  wp plugin activate --all !!!ACTIVATIONTYPE!!!
+else
+  for plugin in $plugins
+  do
+    if wp plugin is-installed $plugin
+    then
+      wp plugin activate $plugin !!!ACTIVATIONTYPE!!!
+    else
+      echo "\033[96mWarning:\033[0m Plugin '"$plugin"' could not be found. Have you installed it?"
+    fi
+  done
+fi
 
 if wp theme is-installed $theme
 then
