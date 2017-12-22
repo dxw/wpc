@@ -4,7 +4,7 @@ const (
 	DOCKERCOMPOSECONTENT = `version: "3"
 
 volumes:
-mysql_data_!!!PROJECTNAME!!!:
+mysql_data_{{.Name}}:
 
 services:
 mailcatcher:
@@ -30,7 +30,7 @@ image: mysql
 ports:
   - "3306:3306"
 volumes:
-  - mysql_data_!!!PROJECTNAME!!!:/var/lib/mysql
+  - mysql_data_{{.Name}}:/var/lib/mysql
 environment:
   MYSQL_DATABASE: wordpress
   MYSQL_ROOT_PASSWORD: foobar

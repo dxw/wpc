@@ -30,13 +30,13 @@ theme=your-theme-slug
 plugins="a-space-separated list-of plugins-to-activate"
 content=/usr/src/app/setup/content
 
-wp core !!!INSTALLTYPE!!! --skip-email --admin_user=admin --admin_password=admin --admin_email=admin@localhost.invalid --url=http://localhost --title="$title"
+wp core {{.InstallType}} --skip-email --admin_user=admin --admin_password=admin --admin_email=admin@localhost.invalid --url=http://localhost --title="$title"
 
 for plugin in $plugins
 do
 if wp plugin is-installed $plugin
 then
-wp plugin activate $plugin !!!ACTIVATIONTYPE!!!
+wp plugin activate $plugin {{.ActivationType}}
 else
 echo "\033[96mWarning:\033[0m Plugin '"$plugin"' could not be found. Have you installed it?"
 fi
@@ -44,7 +44,7 @@ done
 
 if wp theme is-installed $theme
 then
-!!!THEMEENABLE!!!
+{{.ThemeEnable}}
 wp theme activate $theme
 else
 echo "\033[96mWarning:\033[0m Theme '"$theme"' could not be found. Have you installed it?"
