@@ -12,8 +12,9 @@ set -e
 ##
 
 if test -f whippet.json; then
-whippet deps install
-fi`
+  whippet deps install
+fi
+`
 
 	INTERNALCONTENT = `#!/bin/sh
 set -e
@@ -34,43 +35,44 @@ wp core {{.InstallType}} --skip-email --admin_user=admin --admin_password=admin 
 
 for plugin in $plugins
 do
-if wp plugin is-installed $plugin
-then
-wp plugin activate $plugin {{.ActivationType}}
-else
-echo "\033[96mWarning:\033[0m Plugin '"$plugin"' could not be found. Have you installed it?"
-fi
+  if wp plugin is-installed $plugin
+  then
+    wp plugin activate $plugin {{.ActivationType}}
+  else
+      echo "\033[96mWarning:\033[0m Plugin '"$plugin"' could not be found. Have you installed it?"
+  fi
 done
 
 if wp theme is-installed $theme
 then
-{{.ThemeEnable}}
-wp theme activate $theme
+  {{.ThemeEnable}}
+  wp theme activate $theme
 else
-echo "\033[96mWarning:\033[0m Theme '"$theme"' could not be found. Have you installed it?"
+  echo "\033[96mWarning:\033[0m Theme '"$theme"' could not be found. Have you installed it?"
 fi
 
 import() {
-for file in $content/*.xml
-do
-echo "Importing $file..."
-wp import $file --authors=skip
-done
+  for file in $content/*.xml
+  do
+    echo "Importing $file..."
+    wp import $file --authors=skip
+  done
 }
 
 if [ "$(ls -A $content)" ]
 then
-if wp plugin is-installed wordpress-importer
-then
-wp plugin activate wordpress-importer
-import
+  if wp plugin is-installed wordpress-importer
+  then
+    wp plugin activate wordpress-importer
+    import
+  else
+    echo "WordPress Importer not installed... installing now"
+    wp plugin install wordpress-importer --activate
+    import
+    wp plugin uninstall wordpress-importer --deactivate
+  fi
 else
-echo "WordPress Importer not installed... installing now"
-wp plugin install wordpress-importer --activate
-import
-wp plugin uninstall wordpress-importer --deactivate
+  echo "No content to be imported"
 fi
-else
-echo "No content to be imported"
-fi`
+`
 )
