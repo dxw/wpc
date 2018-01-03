@@ -8,7 +8,6 @@ if(!defined('MULTISITE')) {
 if(!defined('SUBDOMAIN_INSTALL')) {
     define( 'SUBDOMAIN_INSTALL', false );
 }
-$base = '/';
 if(!defined('DOMAIN_CURRENT_SITE')) {
     define( 'DOMAIN_CURRENT_SITE', 'localhost' );
 }
