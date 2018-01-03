@@ -60,6 +60,10 @@ func main() {
 	creating("bin/setup", []byte(SETUPCONTENT), EXEC)
 	creating("setup/external.sh", []byte(EXTERNALCONTENT), EXEC)
 	createFromTemplate(INTERNALCONTENT, project, "setup/internal.sh")
+	if *multisite {
+		makeDirs([]string{"config"})
+		creating("config/server.php", []byte(CONFIGSERVERCONTENT), NOEXEC)
+	}
 }
 
 func createFromTemplate(templateContent string, project Project, file string) {
