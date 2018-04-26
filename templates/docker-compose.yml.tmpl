@@ -1,7 +1,4 @@
-package main
-
-const (
-	DOCKERCOMPOSECONTENT = `version: "3"
+version: "3"
 
 volumes:
   mysql_data_{{.Name}}:
@@ -46,5 +43,3 @@ services:
     volumes:
       - .:/usr/src/app
       - ./wp-content:/var/www/html/wp-content
-`
-)

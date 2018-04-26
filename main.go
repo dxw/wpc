@@ -1,13 +1,15 @@
+//go:generate go run generate.go
 package main
 
 import (
 	"bufio"
 	"bytes"
 	"fmt"
-	flag "github.com/spf13/pflag"
 	"io/ioutil"
 	"os"
 	"text/template"
+
+	flag "github.com/spf13/pflag"
 )
 
 //Filemodes
@@ -54,26 +56,24 @@ func main() {
 	dirs := []string{"bin", "setup/content"}
 	makeDirs(dirs)
 
-	createFromTemplate(DOCKERCOMPOSECONTENT, project, "docker-compose.yml")
-	creating("bin/wp", []byte(WPCONTENT), EXEC)
-	creating("bin/console", []byte(CONSOLECONTENT), EXEC)
-	creating("bin/setup", []byte(SETUPCONTENT), EXEC)
-	creating("setup/external.sh", []byte(EXTERNALCONTENT), EXEC)
-	createFromTemplate(INTERNALCONTENT, project, "setup/internal.sh")
+	createFromTemplate(rawTemplates["templates/docker-compose.yml.tmpl"], project, "docker-compose.yml", NOEXEC)
+	creating("bin/wp", rawTemplates["templates/bin/wp.tmpl"], EXEC)
+	creating("bin/console", rawTemplates["templates/bin/console.tmpl"], EXEC)
+	creating("bin/setup", rawTemplates["templates/bin/setup.tmpl"], EXEC)
+	creating("setup/external.sh", rawTemplates["templates/setup/external.sh.tmpl"], EXEC)
+	createFromTemplate(rawTemplates["templates/setup/internal.sh.tmpl"], project, "setup/internal.sh", EXEC)
 	if *multisite {
 		makeDirs([]string{"config"})
-		creating("config/server.php", []byte(CONFIGSERVERCONTENT), NOEXEC)
+		creating("config/server.php", rawTemplates["templates/config/server.php.tmpl"], NOEXEC)
 	}
 }
 
-func createFromTemplate(templateContent string, project Project, file string) {
+func createFromTemplate(templateContent string, project Project, file string, fileMode os.FileMode) {
 	t := template.Must(template.New("content").Parse(templateContent))
-	var contents []byte
 	var tOutput bytes.Buffer
 	err := t.Execute(&tOutput, project)
 	if err == nil {
-		contents = tOutput.Bytes()
-		creating(file, contents, EXEC)
+		creating(file, tOutput.String(), fileMode)
 	}
 }
 
@@ -84,10 +84,10 @@ func makeDirs(directories []string) {
 	}
 }
 
-func creating(file string, data []byte, fileMode os.FileMode) {
+func creating(file string, data string, fileMode os.FileMode) {
 	if okToWrite(file) {
 		fmt.Println("-> Creating", file)
-		ioutil.WriteFile(file, data, fileMode)
+		ioutil.WriteFile(file, []byte(data), fileMode)
 	}
 }
 

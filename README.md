@@ -74,3 +74,7 @@ Example of using an older version (you should just need to add the two final lin
     environment:
       WORDPRESS_VERSION: 4.7
 ```
+
+## Development
+
+Templates live in `templates/` and can be compiled into `raw_templates.go` by running `go generate`.
