@@ -1,6 +1,6 @@
 FROM php:7.2-apache
 
-RUN apt-get update && apt-get install -y --no-install-recommends libmagickwand-dev libjpeg-dev libpng-dev vim-tiny less mysql-client libgmp-dev libsodium-dev && rm -r /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends libmagickwand-dev libjpeg-dev libpng-dev vim-tiny less mysql-client libgmp-dev libsodium-dev zlib1g-dev && rm -r /var/lib/apt/lists/*
 
 RUN pecl install imagick
 
@@ -8,6 +8,7 @@ RUN docker-php-ext-install mysqli && \
     docker-php-ext-install gd && \
     docker-php-ext-install gmp && \
     docker-php-ext-install sodium && \
+    docker-php-ext-install zip && \
     docker-php-ext-enable imagick && \
     a2enmod rewrite
 
