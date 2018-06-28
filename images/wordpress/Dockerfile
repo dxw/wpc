@@ -9,6 +9,9 @@ RUN docker-php-ext-install mysqli && \
     docker-php-ext-install gmp && \
     docker-php-ext-install sodium && \
     docker-php-ext-install zip && \
+    docker-php-ext-install pcntl &&\
+    docker-php-ext-install sockets &&\
+    docker-php-ext-install sysvsem &&\
     docker-php-ext-enable imagick && \
     a2enmod rewrite
 
