@@ -12,6 +12,8 @@ RUN docker-php-ext-install mysqli && \
     docker-php-ext-install pcntl &&\
     docker-php-ext-install sockets &&\
     docker-php-ext-install sysvsem &&\
+    docker-php-ext-install bcmath &&\
+    docker-php-ext-install exif &&\
     docker-php-ext-enable imagick && \
     a2enmod rewrite
 
