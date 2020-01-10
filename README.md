@@ -2,12 +2,10 @@
 
 ## Installation
 
-`docker-compose` must be installed.
-
-With Go installed, and Go's `/bin` in your PATH variable:
+The easiest way to "install" wpc is to create an alias in your shell:
 
 ```
-go get github.com/dxw/wpc
+alias wpc='docker run -ti --rm -v `pwd`:/app thedxw/wpc'
 ```
 
 ## Setting up a project
