@@ -1,4 +1,6 @@
 #!/bin/sh
 set -e
 
-echo 'TODO'
+if test -f whippet.json; then
+  whippet deps install
+fi

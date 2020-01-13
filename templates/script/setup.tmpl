@@ -1,4 +1,5 @@
 #!/bin/sh
 set -e
 
-echo 'TODO'
+script/bootstrap
+docker-compose exec wordpress /usr/src/app/setup/internal.sh
