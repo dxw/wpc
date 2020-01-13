@@ -88,6 +88,11 @@ func getTemplates() map[string]string {
 		"templates/docker-compose.yml.tmpl",
 		"templates/setup/external.sh.tmpl",
 		"templates/setup/internal.sh.tmpl",
+		"templates/script/bootstrap.tmpl",
+		"templates/script/console.tmpl",
+		"templates/script/server.tmpl",
+		"templates/script/setup.tmpl",
+		"templates/script/update.tmpl",
 	}
 	mapping := map[string]string{}
 

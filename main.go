@@ -53,7 +53,7 @@ func main() {
 
 	project := newProject(projectName, *multisite)
 
-	dirs := []string{"bin", "setup/content"}
+	dirs := []string{"bin", "setup/content", "script"}
 	makeDirs(dirs)
 
 	createFromTemplate(rawTemplates["templates/docker-compose.yml.tmpl"], project, "docker-compose.yml", NOEXEC)
@@ -62,6 +62,14 @@ func main() {
 	creating("bin/setup", rawTemplates["templates/bin/setup.tmpl"], EXEC)
 	creating("setup/external.sh", rawTemplates["templates/setup/external.sh.tmpl"], EXEC)
 	createFromTemplate(rawTemplates["templates/setup/internal.sh.tmpl"], project, "setup/internal.sh", EXEC)
+
+	// dxwRFC compliance https://github.com/dxw/tech-team-rfcs/pull/23
+	creating("script/bootstrap", rawTemplates["templates/script/bootstrap.tmpl"], EXEC)
+	creating("script/setup", rawTemplates["templates/script/setup.tmpl"], EXEC)
+	creating("script/update", rawTemplates["templates/script/update.tmpl"], EXEC)
+	creating("script/server", rawTemplates["templates/script/server.tmpl"], EXEC)
+	creating("script/console", rawTemplates["templates/script/console.tmpl"], EXEC)
+
 	if *multisite {
 		makeDirs([]string{"config"})
 		creating("config/server.php", rawTemplates["templates/config/server.php.tmpl"], NOEXEC)
