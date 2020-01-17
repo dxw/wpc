@@ -57,6 +57,7 @@ func main() {
 	makeDirs(dirs)
 
 	createFromTemplate(rawTemplates["templates/docker-compose.yml.tmpl"], project, "docker-compose.yml", NOEXEC)
+	creating("composer.json", rawTemplates["templates/composer.json.tmpl"], NOEXEC)
 	creating("bin/wp", rawTemplates["templates/bin/wp.tmpl"], EXEC)
 	creating("bin/console", rawTemplates["templates/bin/console.tmpl"], EXEC)
 	creating("bin/setup", rawTemplates["templates/bin/setup.tmpl"], EXEC)
