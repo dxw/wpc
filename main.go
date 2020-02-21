@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 	"text/template"
 
 	flag "github.com/spf13/pflag"
@@ -53,15 +54,26 @@ func main() {
 
 	project := newProject(projectName, *multisite)
 
-	dirs := []string{"bin", "setup/content"}
+	dirs := []string{"bin", "setup/content", "script"}
 	makeDirs(dirs)
 
 	createFromTemplate(rawTemplates["templates/docker-compose.yml.tmpl"], project, "docker-compose.yml", NOEXEC)
+	creating("composer.json", rawTemplates["templates/composer.json.tmpl"], NOEXEC)
 	creating("bin/wp", rawTemplates["templates/bin/wp.tmpl"], EXEC)
 	creating("bin/console", rawTemplates["templates/bin/console.tmpl"], EXEC)
 	creating("bin/setup", rawTemplates["templates/bin/setup.tmpl"], EXEC)
 	creating("setup/external.sh", rawTemplates["templates/setup/external.sh.tmpl"], EXEC)
 	createFromTemplate(rawTemplates["templates/setup/internal.sh.tmpl"], project, "setup/internal.sh", EXEC)
+
+	// dxwRFC compliance https://github.com/dxw/tech-team-rfcs/pull/23
+	creating("script/bootstrap", rawTemplates["templates/script/bootstrap.tmpl"], EXEC)
+	creating("script/setup", rawTemplates["templates/script/setup.tmpl"], EXEC)
+	creating("script/update", rawTemplates["templates/script/update.tmpl"], EXEC)
+	creating("script/server", rawTemplates["templates/script/server.tmpl"], EXEC)
+	creating("script/console", rawTemplates["templates/script/console.tmpl"], EXEC)
+
+	amendGitIgnore([]string{"/vendor/"})
+
 	if *multisite {
 		makeDirs([]string{"config"})
 		creating("config/server.php", rawTemplates["templates/config/server.php.tmpl"], NOEXEC)
@@ -101,4 +113,45 @@ func okToWrite(file string) bool {
 		}
 	}
 	return true
+}
+
+func amendGitIgnore(expressions []string) {
+	byteContents, err := ioutil.ReadFile(".gitignore")
+	if err != nil {
+		byteContents = []byte{}
+	}
+	stringContents := string(byteContents)
+
+	lines := strings.Split(stringContents, "\n")
+
+	// If the last line is blank, ignore it
+	if lines[len(lines)-1] == "" {
+		lines = lines[0 : len(lines)-1]
+	}
+
+	fileChanged := false
+
+	for _, expression := range expressions {
+		expressionExists := false
+
+		for _, line := range lines {
+			if expression == line {
+				expressionExists = true
+				break
+			}
+		}
+
+		if !expressionExists {
+			lines = append(lines, expression)
+			fileChanged = true
+		}
+	}
+
+	// Add a blank line at the end - this will cause the file to end with a "\n"
+	lines = append(lines, "")
+
+	if fileChanged {
+		fmt.Println("-> Amending .gitignore")
+		ioutil.WriteFile(".gitignore", []byte(strings.Join(lines, "\n")), 0644)
+	}
 }
