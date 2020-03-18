@@ -122,3 +122,7 @@ Example `docker-compose.yml` file (the last two lines should be added - the rest
 ## Development
 
 Templates live in `templates/` and can be compiled into `raw_templates.go` by running `go generate`.
+
+## Licence
+
+[MIT](COPYING.md)
