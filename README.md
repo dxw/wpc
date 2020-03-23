@@ -24,8 +24,11 @@ If the repository you're using already has `wpc` you'll find the following files
 
 ## Requirements
 
-- [Docker](https://docs.docker.com/docker-for-mac/install/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
+Docker & Docker Compose.
+
+macOS:
+
+- [Docker for Mac](https://docs.docker.com/docker-for-mac/install/) includes Docker Compose
 
 ## Installing `wpc` onto your computer
 
