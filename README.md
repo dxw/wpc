@@ -1,51 +1,100 @@
-# WPC: WordPress & (Docker) Compose
+# WPC: WordPress in Containers
 
-## Installation
+This tool is used to add shell scripts and configuration files that allow running WordPress in Docker containers for development (this setup is *not* suitable for production deployments).
 
-The easiest way to "install" wpc is to create an alias in your shell:
+If the repository you're using already has `wpc` you'll find the following files:
+
+- `script/server` - run WordPress in a container
+  - WordPress will be running on http://localhost
+  - MailCatcher will be running on http://localhost:1080
+  - Beanstalk Console will be running on http://localhost:2080
+- `script/setup` - install WordPress
+  - the default user is `admin` with password `admin`
+  - will also install [whippet](https://github.com/dxw/whippet) dependencies
+  - setup configuration files are in the `setup/` directory
+- `script/update` - run any updates after checking out the latest version
+  - this will update whippet dependencies to the latest versions
+- `script/console` - open a `/bin/sh` console inside the main container
+- `script/bootstrap` - update dependencies (this is called by `script/setup` and `script/update`)
+- `bin/wp` - run [wp-cli](https://wp-cli.org/)
+- `docker-compose.yml` - the Docker Compose configuration for running the development environment
+- `config/server.php` - configuration that would normally go in `wp-config.php` (checked into the repository - used for the development envirnoment)
+- `config/server-local.php` - configuration that would normally go in `wp-config.php` (not checked into the repository)
+- `setup/internal.sh` - this is run by `script/setup`, it runs the wp-cli commands to install WordPress
+
+## Requirements
+
+Docker & Docker Compose.
+
+macOS:
+
+- [Docker for Mac](https://docs.docker.com/docker-for-mac/install/) includes Docker Compose
+
+## Installing `wpc` onto your computer
+
+### Method 1: With Docker
+
+Add this alias to your shell's configuration:
 
 ```
 alias wpc='docker run -ti --rm -v `pwd`:/app thedxw/wpc'
 ```
 
-## Setting up a project
-
-In the root of the project:
+### Method 2: With Go
 
 ```
-wpc name-of-project [--multisite]
+go get github.com/dxw/wpc
 ```
 
-You can edit `setup/internal.sh` to enable plugins and themes using wp-cli. (`setup/external.sh` also exists, if you need to run commands outside of the container).
+## Installing `wpc` into a WordPress project
+
+### Step 1: Run `wpc`
+
+Run `wpc name-of-project` or `wpc name-of-project --multisite` in the root of the project.
+
+`--multisite` will add the appropriate configuration options for running the site as multisite.
+
+### Step 2: Configuration
+
+Edit `setup/internal.sh` to enable plugins and themes or set the name of the site, or anything else you can do with `wp-cli`. (`setup/external.sh` also exists, if you need to run commands outside of the container).
 
 WXR files containing WordPress content can be placed in the project's `setup/content/` folder. This content will be imported on running the project for the first time.
 
-## Usage
+## Running WordPress in a `wpc` project
 
-Running the project for the first time:
-
-```
-docker-compose up -d
-./bin/setup
-```
-
-Running the project after that:
+Running it for the first time:
 
 ```
-docker-compose up -d
+script/server
+# Wait for the server to be running
+script/setup
 ```
 
-WordPress listens on port 80. Mailcatcher listens on port 1080. Beanstalkd Console listens on port 2080.
+Running the project the next time:
 
-MySQL is available by running `./bin/wp db cli`. It will also be listening on port 3306.
+```
+script/server
+```
 
-To access bash within the container: `./bin/console`.
+Running the project after checking out the latest version:
+
+```
+script/server
+# Wait for the server to be running
+script/update
+```
+
+- WordPress: http://localhost
+- MailCatcher: http://localhost:1080
+- Beanstalk Console: http://localhost:2080
+- `/bin/sh` console running on the WordPress container: `script/console`
+- MySQL: `bin/wp db cli`
 
 ## Common issues
 
 All the ports that docker will be listening on (80, 1080, 2080, 3066 & 11300) need to be available, so if you've got local processes running on them, that will stop the containers starting up, usually with an `EADDRINUSE` error.
 
-Things that might be running on port 80: apache (stop with `sudo apachectl stop`), any other local server (e.g. `whippet-server`, XAMPP)
+Things that might be running on port 80: apache (stop with `sudo apachectl stop`), any other local server (e.g. XAMPP)
 
 Things that might be running on port 3306: `mysql` (stop with `mysql.server stop`)
 
@@ -53,9 +102,9 @@ Things that might be running on port 3306: `mysql` (stop with `mysql.server stop
 
 When the image is built, a copy of the latest version of WordPress is downloaded.
 
-When running the image, it will check for updates before starting Apache. It will also download older versions of WordPress via the `WORDPRESS_VERSION` environment variable.
+When running the image, it will check for updates before starting Apache. However it can be configured to download other versions of WordPress via the `WORDPRESS_VERSION` environment variable.
 
-Example of using an older version (you should just need to add the two final lines):
+Example `docker-compose.yml` file (the last two lines should be added - the rest are there by default):
 
 ```
   wordpress:
@@ -76,3 +125,7 @@ Example of using an older version (you should just need to add the two final lin
 ## Development
 
 Templates live in `templates/` and can be compiled into `raw_templates.go` by running `go generate`.
+
+## Licence
+
+[MIT](COPYING.md)
