@@ -14,7 +14,7 @@ If the repository you're using already has `wpc` you'll find the following files
   - setup configuration files are in the `setup/` directory
 - `script/update` - run any updates after checking out the latest version
   - this will update whippet dependencies to the latest versions
-- `script/console` - open a `/bin/sh` console inside the main continer
+- `script/console` - open a `/bin/sh` console inside the main container
 - `script/bootstrap` - update dependencies (this is called by `script/setup` and `script/update`)
 - `bin/wp` - run [wp-cli](https://wp-cli.org/)
 - `docker-compose.yml` - the Docker Compose configuration
