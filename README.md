@@ -17,8 +17,8 @@ If the repository you're using already has `wpc` you'll find the following files
 - `script/console` - open a `/bin/sh` console inside the main container
 - `script/bootstrap` - update dependencies (this is called by `script/setup` and `script/update`)
 - `bin/wp` - run [wp-cli](https://wp-cli.org/)
-- `docker-compose.yml` - the Docker Compose configuration
-- `config/server.php` - configuration that would normally go in `wp-config.php` (checked into the repository)
+- `docker-compose.yml` - the Docker Compose configuration for running the development environment
+- `config/server.php` - configuration that would normally go in `wp-config.php` (checked into the repository - used for the development envirnoment)
 - `config/server-local.php` - configuration that would normally go in `wp-config.php` (not checked into the repository)
 - `setup/internal.sh` - this is run by `script/setup`, it runs the wp-cli commands to install WordPress
 
