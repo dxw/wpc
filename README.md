@@ -1,6 +1,6 @@
 # WPC: WordPress in Containers
 
-This tool is used to add shell scripts and configuration files that allow running WordPress in Docker containers.
+This tool is used to add shell scripts and configuration files that allow running WordPress in Docker containers for development (this setup is *not* suitable for production deployments).
 
 If the repository you're using already has `wpc` you'll find the following files:
 
