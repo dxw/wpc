@@ -62,7 +62,6 @@ func main() {
 	creating("bin/wp", rawTemplates["templates/bin/wp.tmpl"], EXEC)
 	creating("bin/console", rawTemplates["templates/bin/console.tmpl"], EXEC)
 	creating("bin/setup", rawTemplates["templates/bin/setup.tmpl"], EXEC)
-	creating("setup/external.sh", rawTemplates["templates/setup/external.sh.tmpl"], EXEC)
 	createFromTemplate(rawTemplates["templates/setup/internal.sh.tmpl"], project, "setup/internal.sh", EXEC)
 
 	// dxwRFC compliance https://github.com/dxw/tech-team-rfcs/pull/23

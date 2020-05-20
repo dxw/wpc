@@ -87,7 +87,6 @@ func getTemplates() map[string]string {
 		"templates/composer.json.tmpl",
 		"templates/config/server.php.tmpl",
 		"templates/docker-compose.yml.tmpl",
-		"templates/setup/external.sh.tmpl",
 		"templates/setup/internal.sh.tmpl",
 		"templates/script/bootstrap.tmpl",
 		"templates/script/console.tmpl",

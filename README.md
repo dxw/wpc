@@ -56,7 +56,7 @@ Run `wpc name-of-project` or `wpc name-of-project --multisite` in the root of th
 
 ### Step 2: Configuration
 
-Edit `setup/internal.sh` to enable plugins and themes or set the name of the site, or anything else you can do with `wp-cli`. (`setup/external.sh` also exists, if you need to run commands outside of the container).
+Edit `setup/internal.sh` to enable plugins and themes or set the name of the site, or anything else you can do with `wp-cli`.
 
 WXR files containing WordPress content can be placed in the project's `setup/content/` folder. This content will be imported on running the project for the first time.
 
