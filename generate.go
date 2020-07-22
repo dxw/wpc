@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"sort"
 	"strconv"
 )
 
@@ -63,7 +64,17 @@ func getTemplatesArray() *ast.CompositeLit {
 		Elts: []ast.Expr{},
 	}
 
-	for name, template := range getTemplates() {
+	templates := getTemplates()
+
+	// Sort template keys for a reproducible build
+	templateKeys := []string{}
+	for name := range templates {
+		templateKeys = append(templateKeys, name)
+	}
+	sort.Strings(templateKeys)
+
+	for _, name := range templateKeys {
+		template := templates[name]
 		templatesArray.Elts = append(templatesArray.Elts, &ast.KeyValueExpr{
 			Key: &ast.BasicLit{
 				Kind:  token.STRING,
