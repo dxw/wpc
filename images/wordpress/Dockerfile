@@ -2,22 +2,23 @@ FROM php:8.0-rc-apache
 
 RUN apt-get update && apt-get install -y --no-install-recommends libmagickwand-dev libjpeg-dev libpng-dev vim-tiny less mariadb-client libgmp-dev libsodium-dev zlib1g-dev libzip-dev && rm -r /var/lib/apt/lists/*
 
-# pecl was removed in PHP 8.0, but pickle exists
-RUN docker-php-ext-install zip && \
-    curl --silent --show-error --location https://github.com/FriendsOfPHP/pickle/releases/latest/download/pickle.phar > /usr/local/bin/pickle && \
-    chmod 755 /usr/local/bin/pickle
-
-RUN pickle install imagick
-
 RUN docker-php-ext-install mysqli && \
     docker-php-ext-install gd && \
     docker-php-ext-install gmp && \
     docker-php-ext-install sodium && \
+    docker-php-ext-install zip && \
     docker-php-ext-install pcntl &&\
     docker-php-ext-install sockets &&\
     docker-php-ext-install sysvsem &&\
     docker-php-ext-install bcmath &&\
     docker-php-ext-install exif &&\
+    a2enmod rewrite
+
+# pecl was removed in PHP 8.0, but pickle exists
+RUN curl --silent --show-error --location https://github.com/FriendsOfPHP/pickle/releases/latest/download/pickle.phar > /usr/local/bin/pickle && \
+    chmod 755 /usr/local/bin/pickle
+
+RUN pickle install imagick && \
     docker-php-ext-enable imagick && \
     a2enmod rewrite
 
