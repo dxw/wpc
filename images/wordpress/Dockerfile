@@ -18,9 +18,11 @@ RUN docker-php-ext-install mysqli && \
 RUN curl --silent --show-error --location https://github.com/FriendsOfPHP/pickle/releases/latest/download/pickle.phar > /usr/local/bin/pickle && \
     chmod 755 /usr/local/bin/pickle
 
-RUN pickle install imagick && \
-    docker-php-ext-enable imagick && \
-    a2enmod rewrite
+# This site says imagick isn't compatible with PHP 8 yet:
+# https://blog.remirepo.net/post/2020/09/21/PHP-extensions-status-with-upcoming-PHP-8.0
+# RUN pickle install imagick && \
+#     docker-php-ext-enable imagick && \
+#     a2enmod rewrite
 
 RUN curl --silent https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > /usr/local/bin/wp-cli.phar
 
