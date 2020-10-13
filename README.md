@@ -84,6 +84,8 @@ script/server
 script/update
 ```
 
+You can also use `script/server -d` to start the containers in detached mode (i.e. without any output to your terminal window). 
+
 - WordPress: http://localhost
 - MailCatcher: http://localhost:1080
 - Beanstalk Console: http://localhost:2080
