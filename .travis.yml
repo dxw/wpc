@@ -1,6 +1,0 @@
-language: shell
-sudo: false
-git:
-  submodules: false
-script:
-  - ./shellcheck.sh
