@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-FILES="${0} images/wordpress/wp-start images/wordpress/wp templates/bin/* templates/script/* templates/setup/*.sh.tmpl"
+FILES="${0} images/wordpress/wp-start images/wordpress/wp"
 
 for I in ${FILES}; do
   echo "Checking ${I}..."
