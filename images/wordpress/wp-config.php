@@ -44,6 +44,7 @@ if (!defined('WP_DEBUG')) {
 define('WP_DEBUG_DISPLAY', true);
 define('WP_ALLOW_MULTISITE', true);
 define('FS_METHOD', 'direct');
+define('CORE_UPGRADE_SKIP_NEW_BUNDLED', true);
 
 define('AUTH_KEY',         'put your unique phrase here');
 define('SECURE_AUTH_KEY',  'put your unique phrase here');
