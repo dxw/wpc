@@ -1,6 +1,6 @@
 FROM php:7.4-apache
 
-RUN apt-get update && apt-get install -y --no-install-recommends libmagickwand-dev libjpeg-dev libpng-dev vim-tiny less mariadb-client libgmp-dev libsodium-dev zlib1g-dev libzip-dev && rm -r /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends clamav libmagickwand-dev libjpeg-dev libpng-dev vim-tiny less mariadb-client libgmp-dev libsodium-dev zlib1g-dev libzip-dev && rm -r /var/lib/apt/lists/* && freshclam
 
 RUN pecl install imagick
 
