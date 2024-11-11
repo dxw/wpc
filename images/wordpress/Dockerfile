@@ -4,8 +4,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends clamav libmagic
 
 RUN pecl install imagick
 
-RUN docker-php-ext-install mysqli && \
-    docker-php-ext-install gd && \
+RUN docker-php-ext-install gd && \
     docker-php-ext-install gmp && \
     docker-php-ext-install sodium && \
     docker-php-ext-install zip && \
@@ -16,6 +15,9 @@ RUN docker-php-ext-install mysqli && \
     docker-php-ext-install exif &&\
     docker-php-ext-install soap &&\
     docker-php-ext-enable imagick && \
+    docker-php-ext-install pdo pdo_mysql &&\
+    docker-php-ext-install mysqli && \
+    docker-php-ext-enable mysqli && \
     a2enmod rewrite
 
 RUN curl --silent https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > /usr/local/bin/wp-cli.phar
