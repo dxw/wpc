@@ -16,6 +16,8 @@ RUN docker-php-ext-install mysqli && \
     docker-php-ext-install exif &&\
     docker-php-ext-install soap &&\
     docker-php-ext-enable imagick && \
+    docker-php-ext-install pdo pdo_mysql &&\
+    docker-php-ext-enable mysqli && \
     a2enmod rewrite
 
 RUN curl --silent https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > /usr/local/bin/wp-cli.phar
