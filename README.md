@@ -23,6 +23,7 @@ Example `docker-compose.yml` file (the last two lines should be added - the rest
     image: thedxw/wpc-wordpress
     ports:
       - "80:80"
+      - "443:443"
     links:
       - mysql
       - mailcatcher
