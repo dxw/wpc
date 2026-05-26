@@ -32,5 +32,18 @@ COPY wordpress.conf /etc/apache2/sites-enabled/
 COPY mu-plugins /usr/src/mu-plugins/
 COPY wp-config.php /var/www/html/wp-config.php
 
+COPY openssl.cnf /etc/ssl/openssl.cnf
+RUN openssl req -x509 -days 3650 -out /etc/ssl/certs/apache-localhost.crt \
+    -keyout /etc/ssl/private/apache-localhost.key \
+    -newkey rsa:2048 -nodes -sha256 \
+    -subj '/CN=localhost' \
+    -extensions EXT \
+    -config /etc/ssl/openssl.cnf 
+
+
+COPY apache-https.conf /etc/apache2/sites-available/
+RUN a2enmod ssl
+RUN a2ensite apache-https
+
 ENTRYPOINT ["wp-start"]
 CMD ["apache2-foreground"]
