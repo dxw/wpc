@@ -54,6 +54,15 @@ define('AUTH_SALT',        $_ENV['AUTH_SALT'] ?? 'put your unique phrase here');
 define('SECURE_AUTH_SALT', $_ENV['SECURE_AUTH_SALT'] ?? 'put your unique phrase here');
 define('LOGGED_IN_SALT',   $_ENV['LOGGED_IN_SALT'] ?? 'put your unique phrase here');
 define('NONCE_SALT',       $_ENV['NONCE_SALT'] ?? 'put your unique phrase here');
+if ($_ENV['WORDPRESS_VERSION']) {
+    $autoUpdateCore = false;
+} elseif ($_ENV['WP_AUTO_UPDATE_CORE'] !== null) {
+    $autoUpdateCore = $_ENV('WP_AUTO_UPDATE_CORE');
+} else {
+    $autoUpdateCore = true;
+}
+
+define('WP_AUTO_UPDATE_CORE', $autoUpdateCore);
 
 define('WPLANG', $_ENV['WPLANG'] ?? '');
 if (!defined('ABSPATH')) {
