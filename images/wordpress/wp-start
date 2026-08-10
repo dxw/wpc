@@ -1,7 +1,41 @@
 #!/bin/sh
-if test "${WORDPRESS_VERSION}"X = latestX; then
-  wp core update --path=/var/www/html
+set -eu
+
+WP_VERSION="${WORDPRESS_VERSION:-latest}"
+WP_PATH="/var/www/html"
+DB_WAIT_TIMEOUT="${DB_WAIT_TIMEOUT:-120}"
+
+echo "wp-start: WORDPRESS_VERSION=${WP_VERSION}"
+
+wait_for_db() {
+  echo "wp-start: waiting for database (timeout: ${DB_WAIT_TIMEOUT}s)..."
+  i=0
+  while ! wp db check --path="${WP_PATH}" >/dev/null 2>&1; do
+    i=$((i + 1))
+    if [ "$i" -ge "$DB_WAIT_TIMEOUT" ]; then
+      echo "wp-start: database not ready after ${DB_WAIT_TIMEOUT}s"
+      return 1
+    fi
+    sleep 1
+  done
+  echo "wp-start: database is ready"
+}
+
+if [ "${WP_VERSION}" = "latest" ]; then
+  wp core download --path="${WP_PATH}"
 else
-  wp core update --path=/var/www/html --version="${WORDPRESS_VERSION}" --force
+  wp core download --path="${WP_PATH}" --version="${WP_VERSION}" --force
 fi
-exec docker-php-entrypoint "${@}"
+
+# Wait for DB, then run update
+wait_for_db
+
+if [ "${WP_VERSION}" = "latest" ]; then
+  wp core update --path="${WP_PATH}"
+else
+  wp core update --path="${WP_PATH}" --version="${WP_VERSION}" --force
+fi
+
+wp core update-db --path="${WP_PATH}"
+
+exec docker-php-entrypoint "$@"
