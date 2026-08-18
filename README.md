@@ -6,7 +6,7 @@ The image includes a mailcatcher (to avoid unintentionally sending emails to rea
 
 It is *not* suitable for use in production.
 
-Any changes to the `main` branch of this repo will automatically update the image tagged with `:latest` on Docker Hub.
+A separate folder is used for each PHP version supported, each containing all the relevant files required to build the image. There is a docker tag for each supported PHP version, plus a `latest` tag which will point to the latest supported version.
 
 If you're building a new WordPress project, you should use [dxw's WordPress Template](https://github.com/dxw/wordpress-template), which uses this image in its `docker-compose.yml`.
 

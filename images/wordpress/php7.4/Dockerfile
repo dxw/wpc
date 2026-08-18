@@ -24,10 +24,10 @@ ENV WORDPRESS_VERSION=latest
 
 COPY wp /usr/local/bin/
 COPY wp-start /usr/local/bin/
+COPY php.ini /usr/local/etc/php/
 
 RUN wp core download --path=/var/www/html
 
-COPY php.ini /usr/local/etc/php/
 COPY wordpress.conf /etc/apache2/sites-enabled/
 COPY mu-plugins /usr/src/mu-plugins/
 COPY wp-config.php /var/www/html/wp-config.php
