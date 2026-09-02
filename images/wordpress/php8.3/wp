@@ -1,0 +1,2 @@
+#!/bin/sh
+exec php /usr/local/bin/wp-cli.phar --allow-root "${@}"
