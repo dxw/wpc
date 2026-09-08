@@ -1,7 +1,0 @@
-#!/bin/sh
-if test "${WORDPRESS_VERSION}"X = latestX; then
-  wp core update --path=/var/www/html
-else
-  wp core update --path=/var/www/html --version="${WORDPRESS_VERSION}" --force
-fi
-exec docker-php-entrypoint "${@}"
