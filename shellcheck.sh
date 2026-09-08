@@ -1,11 +1,18 @@
 #!/bin/sh
 set -e
 
-FILES="${0} images/wordpress/php7.4/wp-start images/wordpress/php7.4/wp"
+check() {
+  echo "Checking $1..."
+  perl -pe 's/\{\{.*?\}\}/TEMPLATE_VALUE/g' < "$1" | shellcheck -
+}
 
-for I in ${FILES}; do
-  echo "Checking ${I}..."
-  perl -pe 's/\{\{.*?\}\}/TEMPLATE_VALUE/g' < "${I}" | shellcheck -
-done
+check "$0"
+
+find images -type f \( -name wp-start -o -name wp \) -exec sh -c '
+  for file do
+    echo "Checking $file..."
+    perl -pe "s/\{\{.*?\}\}/TEMPLATE_VALUE/g" < "$file" | shellcheck -
+  done
+' sh {} +
 
 echo OK
